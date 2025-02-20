@@ -205,9 +205,15 @@ void kissat_switch_search_mode (kissat *solver) {
   solver->limits.mode.count++;
 
   if (solver->stable)
+  {
+	  printf("#SwiF ");
     switch_to_focused_mode (solver);
+  }
   else
+  {
+	  printf("#SwiS ");
     switch_to_stable_mode (solver);
+  }
 
   solver->averages[solver->stable].saved_decisions = DECISIONS;
 

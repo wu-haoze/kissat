@@ -189,38 +189,74 @@ int kissat_search (kissat *solver) {
     res = kissat_lucky (solver);
   if (!res)
     kissat_classify (solver);
+  int count = 0;
   if (!res && searching (solver)) {
     start_search (solver);
     while (!res) {
       clause *conflict = kissat_search_propagate (solver);
-      if (conflict)
+      //printf("\033[0;30m#Prop\033[0m");
+      if (conflict) {
+        //printf("\033[0;30m#Conf\033[0m");
+        //count++;
         res = kissat_analyze (solver, conflict);
-      else if (solver->iterating)
+      }
+      else if (solver->iterating) {
         iterate (solver);
-      else if (!solver->unassigned)
+      }
+      else if (!solver->unassigned) {
         res = 10;
-      else if (TERMINATED (search_terminated_1))
+      }
+      else if (TERMINATED (search_terminated_1)) {
         break;
-      else if (kissat_reducing (solver))
+      }
+      else if (kissat_reducing (solver)) {
+        printf("#Redu ");
+        // revert to default color
+        count++;
         res = kissat_reduce (solver);
-      else if (kissat_switching_search_mode (solver))
+      }
+      else if (kissat_switching_search_mode (solver)) {
+		  //printf("#Swit ");
+		  count++;
         kissat_switch_search_mode (solver);
-      else if (kissat_restarting (solver))
+      }
+      else if (kissat_restarting (solver)) {
+		  if ( count )
+		  {
+			  printf("\n");
+			  count = 0;
+		  }
         kissat_restart (solver);
-      else if (kissat_reordering (solver))
+      }
+      else if (kissat_reordering (solver)) {
+        printf("#Reor ");
+        count++;
         kissat_reorder (solver);
-      else if (kissat_rephasing (solver))
+      }
+      else if (kissat_rephasing (solver)) {
+		printf("#Reph ");
+        count++;
         kissat_rephase (solver);
-      else if (kissat_probing (solver))
+      }
+      else if (kissat_probing (solver)) {
+        printf("#Prob ");
+        count++;
         res = kissat_probe (solver);
-      else if (kissat_eliminating (solver))
+      }
+      else if (kissat_eliminating (solver)) {
+        printf("#Elim ");
+        count++;
         res = kissat_eliminate (solver);
-      else if (conflict_limit_hit (solver))
+      }
+      else if (conflict_limit_hit (solver)) {
         break;
-      else if (decision_limit_hit (solver))
+      }
+      else if (decision_limit_hit (solver)) {
         break;
-      else
+      }
+      else {
         kissat_decide (solver);
+      }
     }
     stop_search (solver);
   }

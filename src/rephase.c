@@ -111,6 +111,8 @@ static char reset_phases (kissat *solver) {
   assert (count > 0);
   const uint64_t select = (count - 1) % (uint64_t) size_rephase_schedule;
   const char type = rephase_schedule[select](solver);
+  printf("#Rph%c ", type);
+
   kissat_phase (
       solver, "rephase", GET (rephased), "%s phases in %s search mode",
       rephase_type_as_string (type), solver->stable ? "stable" : "focused");
