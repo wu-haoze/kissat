@@ -204,7 +204,6 @@ int kissat_search (kissat *solver) {
         iterate (solver);
       }
       else if (!solver->unassigned) {
-        printf("\n");
         res = 10;
       }
       else if (TERMINATED (search_terminated_1)) {
@@ -261,6 +260,7 @@ int kissat_search (kissat *solver) {
     }
     stop_search (solver);
   }
+  printf("\n");
   report_search_result (solver, res);
   return res;
 }
